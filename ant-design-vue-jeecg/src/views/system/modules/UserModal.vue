@@ -23,7 +23,7 @@
       <a-form :form="form">
 
         <a-form-item label="用户账号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input placeholder="请输入用户账号" v-decorator="[ 'username', validatorRules.username]" :readOnly="!!model.id"/>
+          <a-input placeholder="请输入用户账号" v-decorator="[ 'username', validatorRules.username]" :readonly="isUserNameReadonly()"/>
         </a-form-item>
 
         <template v-if="!model.id">
@@ -226,6 +226,9 @@
       }
     },
     methods: {
+      isUserNameReadonly(){
+        return this.title == "编辑";
+      },
       isDisabledAuth(code){
         return disabledAuthFilter(code);
       },

@@ -127,7 +127,7 @@
             </a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a href="javascript:;" @click="handleDetail(record)">详情</a>
+                <a href="javascript:;" @click="handleEdit(record)">编辑</a>
               </a-menu-item>
 
               <a-menu-item>
