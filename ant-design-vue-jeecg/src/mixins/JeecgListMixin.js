@@ -4,7 +4,7 @@
  * data中url定义 list为查询列表  delete为删除单条记录  deleteBatch为批量删除
  */
 import { filterObj } from '@/utils/util';
-import { deleteAction, getAction,downFile } from '@/api/manage'
+import { deleteAction, getAction, downFile, putAction} from '@/api/manage'
 import Vue from 'vue'
 import { ACCESS_TOKEN } from "@/store/mutation-types"
 
@@ -21,7 +21,7 @@ export const JeecgListMixin = {
       ipagination:{
         current: 1,
         pageSize: 10,
-        pageSizeOptions: ['10', '20', '30'],
+        pageSizeOptions: ['10', '20', '30', '50', '100'],
         showTotal: (total, range) => {
           return range[0] + "-" + range[1] + " 共" + total + "条"
         },
@@ -176,6 +176,52 @@ export const JeecgListMixin = {
           that.$message.warning(res.message);
         }
       });
+    },
+    handleFrozen: function (ids, status) {
+      if(!this.url.frozenBatch){
+        this.$message.error("请设置url.frozenBatch属性!")
+        return
+      }
+      var that = this;
+      putAction(that.url.frozenBatch, {ids: ids, status: status}).then((res) => {
+        if (res.success) {
+          that.$message.success(res.message);
+          that.loadData();
+        } else {
+          that.$message.warning(res.message);
+        }
+      });
+    },
+    batchFrozen: function (status) {
+      if(!this.url.frozenBatch){
+        this.$message.error("请设置url.frozenBatch属性!")
+        return
+      }
+      if (this.selectedRowKeys.length <= 0) {
+        this.$message.warning('请选择一条记录！');
+        return;
+      } else {
+        let ids = "";
+        let that = this;
+        that.selectedRowKeys.forEach(function (val) {
+          ids += val + ",";
+        });
+        that.$confirm({
+          title: "确认操作",
+          content: "是否" + (status == 0 ? "解冻" : "冻结") + "选中体检人?",
+          onOk: function () {
+            putAction(that.url.frozenBatch, {ids: ids, status: status}).then((res) => {
+              if (res.success) {
+                that.$message.success(res.message);
+                that.loadData();
+                that.onClearSelected();
+              } else {
+                that.$message.warning(res.message);
+              }
+            });
+          }
+        });
+      }
     },
     handleEdit: function (record) {
       this.$refs.modalForm.edit(record);

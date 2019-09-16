@@ -208,13 +208,15 @@
             title: '用户账号',
             align: "center",
             dataIndex: 'username',
-            width: 120
+            width: 120,
+            sorter: true
           },
           {
             title: '真实姓名',
             align: "center",
             width: 100,
             dataIndex: 'realname',
+            sorter: true
           },
           {
             title: '头像',
