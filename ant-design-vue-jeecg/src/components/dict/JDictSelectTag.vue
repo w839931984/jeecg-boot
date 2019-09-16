@@ -9,8 +9,13 @@
     :placeholder="placeholder"
     :disabled="disabled"
     :value="value"
+    :filterOption="filterOption"
     @change="handleInput">
-    <a-select-option value="">请选择</a-select-option>
+    <a-select-option value="">
+      <span style="display: inline-block;width: 100%" title="请选择">
+        请选择
+      </span>
+    </a-select-option>
     <a-select-option v-for="(item, key) in dictOptions" :key="key" :value="item.value">
       <span style="display: inline-block;width: 100%" :title=" item.text || item.label ">
         {{ item.text || item.label }}
@@ -42,8 +47,9 @@
       }
     },
     created() {
-      console.log(this.dictCode);
-      console.log(this.value);
+      this.pinyin = require("pinyin");
+      // console.log(this.dictCode);
+      // console.log(this.value);
       if(!this.type || this.type==="list"){
         this.tagType = "select"
       }else{
@@ -69,7 +75,7 @@
         }else{
           val = e
         }
-        console.log(val);
+        //console.log(val);
         if(this.triggerChange){
           this.$emit('change', val);
         }else{
@@ -81,6 +87,22 @@
       },
       getCurrentDictOptions(){
         return this.dictOptions
+      },
+      filterOption(input, option) {
+        let lowerInput = input.toLowerCase();
+        let text = option.componentOptions.children[0].children[0].text.toLowerCase();
+        let array = this.pinyin(text, {
+          style: this.pinyin.STYLE_NORMAL
+        });
+        //首字母
+        let initials = "";
+        array.forEach(word =>{
+          // console.log(word);
+          initials += word[0].substr(0, 1);
+        });
+        // console.log(initials);
+        return (text.indexOf(lowerInput) >= 0)
+          || (initials.toLowerCase().indexOf(lowerInput) >= 0);
       }
     }
   }

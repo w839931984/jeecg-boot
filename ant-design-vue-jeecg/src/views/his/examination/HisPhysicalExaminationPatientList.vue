@@ -133,7 +133,6 @@
 <script>
   import HisPhysicalExaminationPatientModal from './modules/HisPhysicalExaminationPatientModal'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
-  import {frozenBatch} from '@/api/api'
 
   export default {
     name: "HisPhysicalExaminationPatientList",
